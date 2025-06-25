@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import {
   BookOpen,
   Users,
@@ -18,6 +16,7 @@ import {
   PenTool,
 } from "lucide-react"
 import { AITrainingSection } from "@/components/ai-training-section"
+import { ContactForm } from "@/components/contact-form"
 
 export default function HomePage() {
   return (
@@ -320,26 +319,7 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-            <Card>
-              <CardHeader>
-                <CardTitle>Envíame un mensaje</CardTitle>
-                <CardDescription>Te responderé en menos de 24 horas</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form className="space-y-4">
-                  <div>
-                    <Input placeholder="Tu nombre" />
-                  </div>
-                  <div>
-                    <Input type="email" placeholder="Tu email" />
-                  </div>
-                  <div>
-                    <Textarea placeholder="Tu mensaje" rows={4} />
-                  </div>
-                  <Button className="w-full">Enviar Mensaje</Button>
-                </form>
-              </CardContent>
-            </Card>
+            <ContactForm />
           </div>
         </div>
       </section>

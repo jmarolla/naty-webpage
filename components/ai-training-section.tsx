@@ -37,7 +37,7 @@ export function AITrainingSection() {
                 </li>
               </ul>
               <Badge className="mb-4">2 horas</Badge>
-              <div className="text-2xl font-bold text-emerald-600 mb-4">$50</div>
+              <div className="text-2xl font-bold text-emerald-600 mb-4">$63.000</div>
               <Button className="w-full bg-emerald-600 hover:bg-emerald-700">Inscribirse</Button>
             </CardContent>
           </Card>
@@ -64,7 +64,7 @@ export function AITrainingSection() {
                 </li>
               </ul>
               <Badge className="mb-4">3 horas</Badge>
-              <div className="text-2xl font-bold text-orange-600 mb-4">$75</div>
+              <div className="text-2xl font-bold text-orange-600 mb-4">$94.000</div>
               <Button className="w-full bg-orange-600 hover:bg-orange-700">Inscribirse</Button>
             </CardContent>
           </Card>
@@ -91,7 +91,7 @@ export function AITrainingSection() {
                 </li>
               </ul>
               <Badge className="mb-4">4 horas</Badge>
-              <div className="text-2xl font-bold text-teal-600 mb-4">$100</div>
+              <div className="text-2xl font-bold text-teal-600 mb-4">$125.000</div>
               <Button className="w-full bg-teal-600 hover:bg-teal-700">Inscribirse</Button>
             </CardContent>
           </Card>
@@ -105,9 +105,9 @@ export function AITrainingSection() {
                 Accede a las 3 capacitaciones + material exclusivo + seguimiento personalizado por 30 días
               </p>
               <div className="flex items-center justify-center gap-4 mb-6">
-                <span className="text-3xl font-bold text-gray-400 line-through">$225</span>
-                <span className="text-4xl font-bold text-green-600">$180</span>
-                <Badge className="bg-green-100 text-green-800">Ahorra $45</Badge>
+                <span className="text-3xl font-bold text-gray-400 line-through">$282.000</span>
+                <span className="text-4xl font-bold text-green-600">$225.000</span>
+                <Badge className="bg-green-100 text-green-800">Ahorra $57.000</Badge>
               </div>
               <Button
                 size="lg"

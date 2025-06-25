@@ -146,7 +146,7 @@ export default function HomePage() {
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <Badge className="bg-emerald-100 text-emerald-800">Nuevo</Badge>
-                  <span className="text-2xl font-bold text-green-600">$25</span>
+                  <span className="text-2xl font-bold text-green-600">$32.000</span>
                 </div>
                 <CardTitle>Proyecto: My Family</CardTitle>
                 <CardDescription>Unidad completa sobre la familia con 15 actividades</CardDescription>
@@ -181,7 +181,7 @@ export default function HomePage() {
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <Badge className="bg-orange-100 text-orange-800">Popular</Badge>
-                  <span className="text-2xl font-bold text-green-600">$30</span>
+                  <span className="text-2xl font-bold text-green-600">$38.000</span>
                 </div>
                 <CardTitle>Proyecto: Animals & Pets</CardTitle>
                 <CardDescription>Explorando el mundo animal en inglés</CardDescription>
@@ -216,7 +216,7 @@ export default function HomePage() {
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <Badge className="bg-teal-100 text-teal-800">Completo</Badge>
-                  <span className="text-2xl font-bold text-green-600">$45</span>
+                  <span className="text-2xl font-bold text-green-600">$56.000</span>
                 </div>
                 <CardTitle>Proyecto: Seasons & Weather</CardTitle>
                 <CardDescription>Las estaciones del año y el clima</CardDescription>
@@ -284,7 +284,13 @@ export default function HomePage() {
               </div>
             </div>
             <div className="bg-gradient-to-br from-emerald-100 to-teal-100 rounded-lg p-8 text-center">
-              <div className="w-32 h-32 bg-gray-300 rounded-full mx-auto mb-4"></div>
+              <div className="w-32 h-32 mx-auto mb-4">
+                <img
+                  src="/images/miss-naty.jpg"
+                  alt="Miss Naty - Profesora de Inglés"
+                  className="w-full h-full object-cover rounded-full border-4 border-white shadow-lg"
+                />
+              </div>
               <h4 className="text-xl font-semibold mb-2">Miss Naty</h4>
               <p className="text-gray-600">Especialista en Inglés e IA Educativa</p>
             </div>

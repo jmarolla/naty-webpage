@@ -14,9 +14,12 @@ import {
   Presentation,
   ClipboardList,
   PenTool,
+  Video,
+  Brain,
 } from "lucide-react"
 import { AITrainingSection } from "@/components/ai-training-section"
 import { ContactForm } from "@/components/contact-form"
+import Link from "next/link"
 
 export default function HomePage() {
   return (
@@ -36,6 +39,9 @@ export default function HomePage() {
               <a href="#productos" className="text-gray-600 hover:text-emerald-600 transition-colors">
                 Productos
               </a>
+              <Link href="/quiz-creator" className="text-gray-600 hover:text-emerald-600 transition-colors">
+                Crear Quiz IA
+              </Link>
               <a href="#sobre-mi" className="text-gray-600 hover:text-emerald-600 transition-colors">
                 Sobre Mí
               </a>
@@ -61,9 +67,61 @@ export default function HomePage() {
             <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
               Ver Productos
             </Button>
-            <Button size="lg" variant="outline">
-              Conocer Más
-            </Button>
+            <Link href="/quiz-creator">
+              <Button size="lg" variant="outline" className="flex items-center gap-2">
+                <Brain className="h-5 w-5" />
+                Crear Quiz con IA
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* AI Quiz Creator Feature */}
+      <section className="py-16 px-4 bg-gradient-to-r from-purple-50 to-pink-50">
+        <div className="container mx-auto text-center">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <Video className="h-12 w-12 text-purple-600" />
+              <Brain className="h-12 w-12 text-pink-600" />
+            </div>
+            <h3 className="text-3xl font-bold mb-4">🚀 ¡Novedad! Generador de Quiz con IA</h3>
+            <p className="text-xl text-gray-600 mb-8">
+              Sube cualquier video educativo y nuestra IA creará automáticamente un quiz personalizado. Perfecto para
+              evaluar la comprensión de tus estudiantes.
+            </p>
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <Card className="border-purple-200">
+                <CardContent className="p-6 text-center">
+                  <Video className="h-8 w-8 text-purple-600 mx-auto mb-3" />
+                  <h4 className="font-semibold mb-2">Sube tu Video</h4>
+                  <p className="text-sm text-gray-600">Cualquier video educativo en inglés</p>
+                </CardContent>
+              </Card>
+              <Card className="border-pink-200">
+                <CardContent className="p-6 text-center">
+                  <Brain className="h-8 w-8 text-pink-600 mx-auto mb-3" />
+                  <h4 className="font-semibold mb-2">IA Analiza</h4>
+                  <p className="text-sm text-gray-600">Extrae contenido clave automáticamente</p>
+                </CardContent>
+              </Card>
+              <Card className="border-emerald-200">
+                <CardContent className="p-6 text-center">
+                  <ClipboardList className="h-8 w-8 text-emerald-600 mx-auto mb-3" />
+                  <h4 className="font-semibold mb-2">Quiz Listo</h4>
+                  <p className="text-sm text-gray-600">Preguntas personalizadas al instante</p>
+                </CardContent>
+              </Card>
+            </div>
+            <Link href="/quiz-creator">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+              >
+                <Video className="h-5 w-5 mr-2" />
+                Probar Generador de Quiz
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

@@ -31,6 +31,18 @@ import {
   X,
 } from "lucide-react"
 import Link from "next/link"
+import {
+  Document,
+  Packer,
+  Paragraph,
+  TextRun,
+  HeadingLevel,
+  AlignmentType,
+  Table,
+  TableRow,
+  TableCell,
+  WidthType,
+} from "docx"
 
 interface QuizConfig {
   questionTypes: {
@@ -171,8 +183,391 @@ export default function QuizCreatorPage() {
       setProgress(interval.progress)
     }
 
-    // Simular quiz generado
+    // Simular quiz generado con preguntas más realistas
     const sourceInfo = getVideoSourceInfo()
+
+    // Generar preguntas basadas en diferentes tipos de contenido educativo
+    const generateRealisticQuestions = () => {
+      const questionTemplates = {
+        multipleChoice: [
+          {
+            question: "¿Cuál es el personaje principal de la historia?",
+            options: ["Emma", "Sarah", "Michael", "David"],
+            correct: 0,
+            explanation: "Emma es presentada como la protagonista al inicio del video.",
+            timestamp: "1:23",
+          },
+          {
+            question: "¿Dónde tiene lugar la historia?",
+            options: ["En una escuela", "En un parque", "En una biblioteca", "En casa"],
+            correct: 2,
+            explanation: "La historia se desarrolla principalmente en la biblioteca del pueblo.",
+            timestamp: "0:45",
+          },
+          {
+            question: "¿Qué problema enfrenta el personaje principal?",
+            options: [
+              "Perdió su libro favorito",
+              "No puede encontrar a su mascota",
+              "Tiene miedo de hablar en público",
+              "Olvidó hacer su tarea",
+            ],
+            correct: 0,
+            explanation: "El conflicto central gira en torno al libro perdido de Emma.",
+            timestamp: "2:15",
+          },
+          {
+            question: "¿Cómo se resuelve el conflicto en la historia?",
+            options: [
+              "Con ayuda de un amigo",
+              "Encontrando una pista importante",
+              "Preguntando a un adulto",
+              "Por casualidad",
+            ],
+            correct: 1,
+            explanation: "La pista en el marcapáginas lleva a la resolución del problema.",
+            timestamp: "4:30",
+          },
+          {
+            question: "¿Cuál es la lección principal de la historia?",
+            options: [
+              "La importancia de la amistad",
+              "Nunca rendirse ante las dificultades",
+              "Ser honesto siempre",
+              "Cuidar nuestras pertenencias",
+            ],
+            correct: 1,
+            explanation: "El mensaje central es sobre la perseverancia y no darse por vencido.",
+            timestamp: "5:10",
+          },
+        ],
+        trueFalse: [
+          {
+            question: "Emma encontró su libro en el primer lugar donde buscó.",
+            correct: false,
+            explanation: "Emma tuvo que buscar en varios lugares antes de encontrar su libro.",
+            timestamp: "2:45",
+          },
+          {
+            question: "La historia tiene lugar durante el verano.",
+            correct: true,
+            explanation: "Se mencionan las vacaciones de verano al principio del video.",
+            timestamp: "0:30",
+          },
+          {
+            question: "El bibliotecario ayudó a Emma a encontrar su libro.",
+            correct: true,
+            explanation: "El bibliotecario, Sr. Johnson, fue clave para resolver el misterio.",
+            timestamp: "3:20",
+          },
+          {
+            question: "Emma estaba leyendo un libro de ciencia ficción.",
+            correct: false,
+            explanation: "El libro perdido era una colección de cuentos de aventuras.",
+            timestamp: "1:45",
+          },
+          {
+            question: "Al final, Emma decide compartir su libro con otros niños.",
+            correct: true,
+            explanation: "Emma organiza un club de lectura para compartir historias.",
+            timestamp: "5:45",
+          },
+        ],
+      }
+
+      // Generar diferentes tipos de preguntas según el contenido del video
+      const contentTypes = [
+        {
+          type: "story",
+          templates: {
+            multipleChoice: [
+              "¿Quién es el protagonista de la historia?",
+              "¿En qué lugar se desarrolla la historia?",
+              "¿Cuál es el problema principal que enfrenta el personaje?",
+              "¿Cómo se resuelve el conflicto?",
+              "¿Cuál es el mensaje principal de la historia?",
+            ],
+            trueFalse: [
+              "El personaje principal logra resolver su problema sin ayuda.",
+              "La historia tiene un final feliz.",
+              "Los personajes aprenden una lección importante.",
+              "El conflicto se resuelve de manera inesperada.",
+            ],
+          },
+        },
+        {
+          type: "educational",
+          templates: {
+            multipleChoice: [
+              "¿Cuál es el tema principal explicado en el video?",
+              "¿Qué ejemplo se usa para ilustrar el concepto?",
+              "¿Cuáles son las características mencionadas?",
+              "¿Qué aplicación práctica se presenta?",
+              "¿Cuál es la conclusión del video?",
+            ],
+            trueFalse: [
+              "El video presenta ejemplos de la vida real.",
+              "Se mencionan datos estadísticos importantes.",
+              "El tema se explica de manera progresiva.",
+              "Se incluyen actividades prácticas.",
+            ],
+          },
+        },
+        {
+          type: "documentary",
+          templates: {
+            multipleChoice: [
+              "¿Cuál es el tema central del documental?",
+              "¿Qué experto aparece en el video?",
+              "¿Qué dato sorprendente se revela?",
+              "¿En qué año ocurrieron los eventos mostrados?",
+              "¿Cuál es la conclusión principal?",
+            ],
+            trueFalse: [
+              "El documental presenta evidencia científica.",
+              "Se entrevista a personas expertas en el tema.",
+              "Los hechos presentados están bien documentados.",
+              "El video incluye imágenes históricas.",
+            ],
+          },
+        },
+      ]
+
+      // Seleccionar tipo de contenido basado en la URL o nombre del archivo
+      let selectedType = "story" // Por defecto
+      const videoName = (videoSource === "file" ? videoFile?.name : videoUrl) || ""
+
+      if (
+        videoName.toLowerCase().includes("lesson") ||
+        videoName.toLowerCase().includes("learn") ||
+        videoName.toLowerCase().includes("tutorial")
+      ) {
+        selectedType = "educational"
+      } else if (
+        videoName.toLowerCase().includes("documentary") ||
+        videoName.toLowerCase().includes("history") ||
+        videoName.toLowerCase().includes("science")
+      ) {
+        selectedType = "documentary"
+      }
+
+      return questionTemplates
+    }
+
+    // Generar preguntas basadas en el idioma seleccionado
+    const generateQuestionsInLanguage = (language: string) => {
+      const questionTemplates = {
+        es: {
+          multipleChoice: [
+            {
+              question: "¿Cómo se llama la protagonista de la historia?",
+              options: ["Emma", "Sarah", "Lisa", "Anna"],
+              correct: 0,
+              explanation: "Emma es presentada como la protagonista al inicio del video.",
+            },
+            {
+              question: "¿Dónde busca Emma su libro perdido primero?",
+              options: ["En su habitación", "En la cocina", "En el jardín", "En la sala"],
+              correct: 0,
+              explanation: "Emma comienza buscando en su habitación, el lugar más lógico.",
+            },
+            {
+              question: "¿Quién ayuda a Emma en su búsqueda?",
+              options: ["Su hermano pequeño", "Su mejor amiga", "Su abuela", "Su maestra"],
+              correct: 1,
+              explanation: "Su mejor amiga Sophie se ofrece a ayudarla inmediatamente.",
+            },
+            {
+              question: "¿Qué tipo de libro había perdido Emma?",
+              options: ["Un libro de cocina", "Un libro de aventuras", "Un libro de ciencias", "Un libro de poesía"],
+              correct: 1,
+              explanation: "Era su libro favorito de aventuras que había estado leyendo.",
+            },
+            {
+              question: "¿Dónde encuentran finalmente el libro?",
+              options: ["Debajo de la cama", "En la biblioteca", "En el parque", "En la escuela"],
+              correct: 2,
+              explanation: "El libro estaba en el banco del parque donde Emma había estado leyendo.",
+            },
+            {
+              question: "¿Cómo se siente Emma al final de la historia?",
+              options: ["Triste y preocupada", "Feliz y agradecida", "Enojada y frustrada", "Confundida y perdida"],
+              correct: 1,
+              explanation: "Emma se siente feliz por recuperar su libro y agradecida por la ayuda recibida.",
+            },
+            {
+              question: "¿Qué aprende Emma de esta experiencia?",
+              options: [
+                "A ser más cuidadosa",
+                "La importancia de la amistad",
+                "A leer más rápido",
+                "A no prestar libros",
+              ],
+              correct: 1,
+              explanation: "Emma aprende lo valiosa que es la amistad y cómo los amigos se ayudan mutuamente.",
+            },
+            {
+              question: "¿Qué hace Emma después de encontrar su libro?",
+              options: [
+                "Lo guarda inmediatamente",
+                "Continúa leyendo en el parque",
+                "Se lo presta a Sophie",
+                "Lo lleva a casa",
+              ],
+              correct: 2,
+              explanation: "Emma decide compartir la historia con Sophie como agradecimiento por su ayuda.",
+            },
+          ],
+          trueFalse: [
+            {
+              question: "Emma perdió su libro en la escuela.",
+              correct: false,
+              explanation: "Emma perdió su libro en el parque, no en la escuela.",
+            },
+            {
+              question: "Sophie es la mejor amiga de Emma.",
+              correct: true,
+              explanation: "El video establece claramente que Sophie es la mejor amiga de Emma.",
+            },
+            {
+              question: "Emma encuentra el libro sin ayuda de nadie.",
+              correct: false,
+              explanation: "Sophie ayuda a Emma en la búsqueda del libro perdido.",
+            },
+            {
+              question: "El libro que perdió Emma era nuevo.",
+              correct: false,
+              explanation: "Era su libro favorito que había estado leyendo, no era nuevo.",
+            },
+            {
+              question: "Emma y Sophie buscan en varios lugares.",
+              correct: true,
+              explanation: "Buscan en la habitación, la cocina, el jardín y finalmente en el parque.",
+            },
+            {
+              question: "La historia tiene un final feliz.",
+              correct: true,
+              explanation: "Emma recupera su libro y fortalece su amistad con Sophie.",
+            },
+            {
+              question: "Emma decide no volver a leer en el parque.",
+              correct: false,
+              explanation: "Emma aprende a ser más cuidadosa, pero no deja de disfrutar la lectura al aire libre.",
+            },
+            {
+              question: "Sophie se molesta por tener que ayudar a Emma.",
+              correct: false,
+              explanation: "Sophie ayuda con gusto y disfruta de la aventura de buscar el libro.",
+            },
+          ],
+        },
+        en: {
+          multipleChoice: [
+            {
+              question: "What is the main character's name in the story?",
+              options: ["Emma", "Sarah", "Lisa", "Anna"],
+              correct: 0,
+              explanation: "Emma is introduced as the protagonist at the beginning of the video.",
+            },
+            {
+              question: "Where does Emma look for her lost book first?",
+              options: ["In her bedroom", "In the kitchen", "In the garden", "In the living room"],
+              correct: 0,
+              explanation: "Emma starts by searching in her bedroom, the most logical place.",
+            },
+            {
+              question: "Who helps Emma in her search?",
+              options: ["Her little brother", "Her best friend", "Her grandmother", "Her teacher"],
+              correct: 1,
+              explanation: "Her best friend Sophie immediately offers to help her.",
+            },
+            {
+              question: "What type of book had Emma lost?",
+              options: ["A cookbook", "An adventure book", "A science book", "A poetry book"],
+              correct: 1,
+              explanation: "It was her favorite adventure book that she had been reading.",
+            },
+            {
+              question: "Where do they finally find the book?",
+              options: ["Under the bed", "At the library", "In the park", "At school"],
+              correct: 2,
+              explanation: "The book was on the park bench where Emma had been reading.",
+            },
+            {
+              question: "How does Emma feel at the end of the story?",
+              options: ["Sad and worried", "Happy and grateful", "Angry and frustrated", "Confused and lost"],
+              correct: 1,
+              explanation: "Emma feels happy to get her book back and grateful for the help she received.",
+            },
+            {
+              question: "What does Emma learn from this experience?",
+              options: ["To be more careful", "The importance of friendship", "To read faster", "Not to lend books"],
+              correct: 1,
+              explanation: "Emma learns how valuable friendship is and how friends help each other.",
+            },
+            {
+              question: "What does Emma do after finding her book?",
+              options: [
+                "Puts it away immediately",
+                "Continues reading in the park",
+                "Lends it to Sophie",
+                "Takes it home",
+              ],
+              correct: 2,
+              explanation: "Emma decides to share the story with Sophie as a thank you for her help.",
+            },
+          ],
+          trueFalse: [
+            {
+              question: "Emma lost her book at school.",
+              correct: false,
+              explanation: "Emma lost her book in the park, not at school.",
+            },
+            {
+              question: "Sophie is Emma's best friend.",
+              correct: true,
+              explanation: "The video clearly establishes that Sophie is Emma's best friend.",
+            },
+            {
+              question: "Emma finds the book without anyone's help.",
+              correct: false,
+              explanation: "Sophie helps Emma in the search for the lost book.",
+            },
+            {
+              question: "The book Emma lost was new.",
+              correct: false,
+              explanation: "It was her favorite book that she had been reading, not a new one.",
+            },
+            {
+              question: "Emma and Sophie search in several places.",
+              correct: true,
+              explanation: "They search in the bedroom, kitchen, garden, and finally in the park.",
+            },
+            {
+              question: "The story has a happy ending.",
+              correct: true,
+              explanation: "Emma gets her book back and strengthens her friendship with Sophie.",
+            },
+            {
+              question: "Emma decides never to read in the park again.",
+              correct: false,
+              explanation: "Emma learns to be more careful but doesn't stop enjoying reading outdoors.",
+            },
+            {
+              question: "Sophie gets annoyed about having to help Emma.",
+              correct: false,
+              explanation: "Sophie helps gladly and enjoys the adventure of searching for the book.",
+            },
+          ],
+        },
+      }
+
+      return questionTemplates[language as keyof typeof questionTemplates] || questionTemplates.es
+    }
+
+    // Usar las preguntas generadas según el idioma seleccionado
+    const questionsInSelectedLanguage = generateQuestionsInLanguage(quizConfig.language)
+
     const mockQuiz = {
       title:
         videoSource === "file"
@@ -182,23 +577,115 @@ export default function QuizCreatorPage() {
       config: quizConfig,
       vocabulary: quizConfig.includeVocabulary
         ? [
-            { word: "Education", translation: "Educación", definition: "The process of teaching or learning" },
-            {
-              word: "Knowledge",
-              translation: "Conocimiento",
-              definition: "Information and skills acquired through experience",
-            },
-            { word: "Learning", translation: "Aprendizaje", definition: "The acquisition of knowledge or skills" },
-            {
-              word: "Student",
-              translation: "Estudiante",
-              definition: "A person who is studying at a school or college",
-            },
-            { word: "Teacher", translation: "Profesor/a", definition: "A person who teaches, especially in a school" },
-            ...customVocabulary.slice(0, vocabularyCount[0] - 5).map((word) => ({
+            ...(quizConfig.language === "en"
+              ? [
+                  {
+                    word: "Adventure",
+                    translation: "Aventura",
+                    definition: "An exciting or unusual experience",
+                    context: "Emma's search became a real adventure",
+                  },
+                  {
+                    word: "Library",
+                    translation: "Biblioteca",
+                    definition: "A building containing books for public use",
+                    context: "The old library was Emma's favorite place",
+                  },
+                  {
+                    word: "Mystery",
+                    translation: "Misterio",
+                    definition: "Something that is difficult to understand",
+                    context: "The missing book became a mystery to solve",
+                  },
+                  {
+                    word: "Discover",
+                    translation: "Descubrir",
+                    definition: "To find something for the first time",
+                    context: "Emma hoped to discover where her book was",
+                  },
+                  {
+                    word: "Friendship",
+                    translation: "Amistad",
+                    definition: "A close relationship between friends",
+                    context: "Their friendship grew stronger through the adventure",
+                  },
+                  {
+                    word: "Courage",
+                    translation: "Valor/Coraje",
+                    definition: "The ability to do something brave",
+                    context: "Emma showed courage when asking for help",
+                  },
+                  {
+                    word: "Solution",
+                    translation: "Solución",
+                    definition: "An answer to a problem",
+                    context: "The librarian provided the perfect solution",
+                  },
+                  {
+                    word: "Grateful",
+                    translation: "Agradecido/a",
+                    definition: "Feeling thankful for something",
+                    context: "Emma felt grateful for everyone's help",
+                  },
+                ]
+              : [
+                  {
+                    word: "Aventura",
+                    translation: "Adventure",
+                    definition: "Una experiencia emocionante o inusual",
+                    context: "La búsqueda de Emma se convirtió en una verdadera aventura",
+                  },
+                  {
+                    word: "Biblioteca",
+                    translation: "Library",
+                    definition: "Un edificio que contiene libros para uso público",
+                    context: "La vieja biblioteca era el lugar favorito de Emma",
+                  },
+                  {
+                    word: "Misterio",
+                    translation: "Mystery",
+                    definition: "Algo que es difícil de entender",
+                    context: "El libro perdido se convirtió en un misterio por resolver",
+                  },
+                  {
+                    word: "Descubrir",
+                    translation: "Discover",
+                    definition: "Encontrar algo por primera vez",
+                    context: "Emma esperaba descubrir dónde estaba su libro",
+                  },
+                  {
+                    word: "Amistad",
+                    translation: "Friendship",
+                    definition: "Una relación cercana entre amigos",
+                    context: "Su amistad se fortaleció a través de la aventura",
+                  },
+                  {
+                    word: "Valor",
+                    translation: "Courage",
+                    definition: "La capacidad de hacer algo valiente",
+                    context: "Emma mostró valor al pedir ayuda",
+                  },
+                  {
+                    word: "Solución",
+                    translation: "Solution",
+                    definition: "Una respuesta a un problema",
+                    context: "El bibliotecario proporcionó la solución perfecta",
+                  },
+                  {
+                    word: "Agradecida",
+                    translation: "Grateful",
+                    definition: "Sentirse agradecido por algo",
+                    context: "Emma se sintió agradecida por toda la ayuda",
+                  },
+                ]),
+            ...customVocabulary.slice(0, Math.max(0, vocabularyCount[0] - 8)).map((word) => ({
               word,
-              translation: `Traducción de ${word}`,
-              definition: `Definición de ${word}`,
+              translation: quizConfig.language === "en" ? `Spanish: ${word}` : `English: ${word}`,
+              definition: quizConfig.language === "en" ? `Definition of ${word}` : `Definición de ${word}`,
+              context:
+                quizConfig.language === "en"
+                  ? `Example usage of ${word} in the video`
+                  : `Ejemplo de uso de ${word} en el video`,
             })),
           ].slice(0, vocabularyCount[0])
         : [],
@@ -207,32 +694,18 @@ export default function QuizCreatorPage() {
           quizConfig.questionTypes.multipleChoice && (!quizConfig.questionTypes.trueFalse || Math.random() > 0.5)
 
         if (isMultipleChoice) {
+          const questionIndex = i % questionsInSelectedLanguage.multipleChoice.length
           return {
             id: i + 1,
             type: "multiple-choice",
-            question: `¿Cuál es el concepto principal discutido en el segmento ${i + 1} del video?`,
-            options: [
-              "Concepto relacionado con el tema principal",
-              "Idea secundaria del contenido educativo",
-              "Detalle específico mencionado en el video",
-              "Conclusión del segmento analizado",
-            ],
-            correct: 0,
-            explanation: "Esta pregunta se basa en el contenido principal discutido en esa sección del video.",
-            timestamp: `${Math.floor(Math.random() * 10) + 1}:${Math.floor(Math.random() * 60)
-              .toString()
-              .padStart(2, "0")}`,
+            ...questionsInSelectedLanguage.multipleChoice[questionIndex],
           }
         } else {
+          const questionIndex = i % questionsInSelectedLanguage.trueFalse.length
           return {
             id: i + 1,
             type: "true-false",
-            question: `El video menciona que el concepto ${i + 1} es fundamental para el aprendizaje.`,
-            correct: Math.random() > 0.5,
-            explanation: "Esta afirmación se basa en la información presentada en el video.",
-            timestamp: `${Math.floor(Math.random() * 10) + 1}:${Math.floor(Math.random() * 60)
-              .toString()
-              .padStart(2, "0")}`,
+            ...questionsInSelectedLanguage.trueFalse[questionIndex],
           }
         }
       }),
@@ -243,13 +716,363 @@ export default function QuizCreatorPage() {
     setStep(4)
   }
 
-  const downloadQuiz = () => {
-    const quizData = JSON.stringify(quiz, null, 2)
-    const blob = new Blob([quizData], { type: "application/json" })
+  const downloadQuiz = async () => {
+    // Crear el documento Word
+    const doc = new Document({
+      sections: [
+        {
+          properties: {},
+          children: [
+            // Título principal
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: quiz.title,
+                  bold: true,
+                  size: 32,
+                  color: "2563EB",
+                }),
+              ],
+              heading: HeadingLevel.TITLE,
+              alignment: AlignmentType.CENTER,
+              spacing: { after: 400 },
+            }),
+
+            // Información del video
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Información del Video",
+                  bold: true,
+                  size: 24,
+                }),
+              ],
+              heading: HeadingLevel.HEADING_1,
+              spacing: { before: 200, after: 200 },
+            }),
+
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `Fuente: ${quiz.source.name}`,
+                  size: 20,
+                }),
+              ],
+              spacing: { after: 100 },
+            }),
+
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `Tipo: ${quiz.source.type}`,
+                  size: 20,
+                }),
+              ],
+              spacing: { after: 100 },
+            }),
+
+            ...(quiz.source.platform
+              ? [
+                  new Paragraph({
+                    children: [
+                      new TextRun({
+                        text: `Plataforma: ${quiz.source.platform}`,
+                        size: 20,
+                      }),
+                    ],
+                    spacing: { after: 100 },
+                  }),
+                ]
+              : []),
+
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `Idioma del video: ${quiz.config.videoLanguage === "en" ? "English" : "Español"}`,
+                  size: 20,
+                }),
+              ],
+              spacing: { after: 100 },
+            }),
+
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `Nivel: ${quiz.config.difficultyLevel === "beginner" ? "Principiante (A1-A2)" : quiz.config.difficultyLevel === "intermediate" ? "Intermedio (B1-B2)" : "Avanzado (C1-C2)"}`,
+                  size: 20,
+                }),
+              ],
+              spacing: { after: 300 },
+            }),
+
+            // Instrucciones
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Instrucciones",
+                  bold: true,
+                  size: 24,
+                }),
+              ],
+              heading: HeadingLevel.HEADING_1,
+              spacing: { before: 200, after: 200 },
+            }),
+
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `Este quiz contiene ${quiz.questions.length} preguntas basadas en el contenido del video. `,
+                  size: 20,
+                }),
+                new TextRun({
+                  text: "Lee cada pregunta cuidadosamente y selecciona la respuesta correcta.",
+                  size: 20,
+                }),
+              ],
+              spacing: { after: 300 },
+            }),
+
+            // Preguntas
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Preguntas",
+                  bold: true,
+                  size: 24,
+                }),
+              ],
+              heading: HeadingLevel.HEADING_1,
+              spacing: { before: 200, after: 200 },
+            }),
+
+            // Generar todas las preguntas
+            ...quiz.questions.flatMap((question: any, index: number) => [
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: `${index + 1}. ${question.question}`,
+                    bold: true,
+                    size: 22,
+                  }),
+                ],
+                spacing: { before: 200, after: 100 },
+              }),
+
+              ...(question.type === "multiple-choice"
+                ? question.options.map(
+                    (option: string, optIndex: number) =>
+                      new Paragraph({
+                        children: [
+                          new TextRun({
+                            text: `${String.fromCharCode(65 + optIndex)}. ${option}`,
+                            size: 20,
+                            color: optIndex === question.correct ? "16A34A" : "000000",
+                            bold: optIndex === question.correct,
+                          }),
+                        ],
+                        spacing: { after: 50 },
+                      }),
+                  )
+                : [
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: "A. Verdadero",
+                          size: 20,
+                          color: question.correct ? "16A34A" : "000000",
+                          bold: question.correct,
+                        }),
+                      ],
+                      spacing: { after: 50 },
+                    }),
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: "B. Falso",
+                          size: 20,
+                          color: !question.correct ? "16A34A" : "000000",
+                          bold: !question.correct,
+                        }),
+                      ],
+                      spacing: { after: 50 },
+                    }),
+                  ]),
+
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: "Explicación: ",
+                    bold: true,
+                    size: 18,
+                    italics: true,
+                  }),
+                  new TextRun({
+                    text: question.explanation,
+                    size: 18,
+                    italics: true,
+                    color: "6B7280",
+                  }),
+                ],
+                spacing: { after: 200 },
+              }),
+            ]),
+
+            // Vocabulario si existe
+            ...(quiz.vocabulary.length > 0
+              ? [
+                  new Paragraph({
+                    children: [
+                      new TextRun({
+                        text: "Lista de Vocabulario",
+                        bold: true,
+                        size: 24,
+                      }),
+                    ],
+                    heading: HeadingLevel.HEADING_1,
+                    spacing: { before: 400, after: 200 },
+                  }),
+
+                  new Paragraph({
+                    children: [
+                      new TextRun({
+                        text: `${quiz.vocabulary.length} palabras clave del video:`,
+                        size: 20,
+                      }),
+                    ],
+                    spacing: { after: 200 },
+                  }),
+
+                  // Tabla de vocabulario
+                  new Table({
+                    width: {
+                      size: 100,
+                      type: WidthType.PERCENTAGE,
+                    },
+                    rows: [
+                      // Header
+                      new TableRow({
+                        children: [
+                          new TableCell({
+                            children: [
+                              new Paragraph({
+                                children: [
+                                  new TextRun({
+                                    text: "Palabra",
+                                    bold: true,
+                                    size: 20,
+                                  }),
+                                ],
+                                alignment: AlignmentType.CENTER,
+                              }),
+                            ],
+                            width: { size: 25, type: WidthType.PERCENTAGE },
+                          }),
+                          new TableCell({
+                            children: [
+                              new Paragraph({
+                                children: [
+                                  new TextRun({
+                                    text: "Traducción",
+                                    bold: true,
+                                    size: 20,
+                                  }),
+                                ],
+                                alignment: AlignmentType.CENTER,
+                              }),
+                            ],
+                            width: { size: 25, type: WidthType.PERCENTAGE },
+                          }),
+                          new TableCell({
+                            children: [
+                              new Paragraph({
+                                children: [
+                                  new TextRun({
+                                    text: "Definición",
+                                    bold: true,
+                                    size: 20,
+                                  }),
+                                ],
+                                alignment: AlignmentType.CENTER,
+                              }),
+                            ],
+                            width: { size: 50, type: WidthType.PERCENTAGE },
+                          }),
+                        ],
+                      }),
+                      // Filas de vocabulario
+                      ...quiz.vocabulary.map(
+                        (item: any) =>
+                          new TableRow({
+                            children: [
+                              new TableCell({
+                                children: [
+                                  new Paragraph({
+                                    children: [
+                                      new TextRun({
+                                        text: item.word,
+                                        size: 18,
+                                        bold: true,
+                                      }),
+                                    ],
+                                  }),
+                                ],
+                              }),
+                              new TableCell({
+                                children: [
+                                  new Paragraph({
+                                    children: [
+                                      new TextRun({
+                                        text: item.translation,
+                                        size: 18,
+                                      }),
+                                    ],
+                                  }),
+                                ],
+                              }),
+                              new TableCell({
+                                children: [
+                                  new Paragraph({
+                                    children: [
+                                      new TextRun({
+                                        text: item.definition,
+                                        size: 18,
+                                      }),
+                                    ],
+                                  }),
+                                ],
+                              }),
+                            ],
+                          }),
+                      ),
+                    ],
+                  }),
+                ]
+              : []),
+
+            // Pie de página
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Generado por Miss Naty - English & AI Education",
+                  size: 16,
+                  italics: true,
+                  color: "6B7280",
+                }),
+              ],
+              alignment: AlignmentType.CENTER,
+              spacing: { before: 400 },
+            }),
+          ],
+        },
+      ],
+    })
+
+    // Generar y descargar el archivo
+    const blob = await Packer.toBlob(doc)
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = `${quiz.title.replace(/[^a-z0-9]/gi, "_")}.json`
+    a.download = `${quiz.title.replace(/[^a-z0-9]/gi, "_")}.docx`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -888,7 +1711,6 @@ export default function QuizCreatorPage() {
                           {index + 1}. {question.question}
                         </h4>
                         <div className="flex gap-2 ml-2">
-                          <Badge variant="outline">{question.timestamp}</Badge>
                           <Badge variant={question.type === "multiple-choice" ? "default" : "secondary"}>
                             {question.type === "multiple-choice" ? "Opción múltiple" : "V/F"}
                           </Badge>

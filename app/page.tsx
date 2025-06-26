@@ -16,6 +16,7 @@ import {
   PenTool,
   Video,
   Brain,
+  Music,
 } from "lucide-react"
 import { AITrainingSection } from "@/components/ai-training-section"
 import { ContactForm } from "@/components/contact-form"
@@ -41,6 +42,9 @@ export default function HomePage() {
               </a>
               <Link href="/quiz-creator" className="text-gray-600 hover:text-emerald-600 transition-colors">
                 Crear Quiz IA
+              </Link>
+              <Link href="/music-generator" className="text-gray-600 hover:text-emerald-600 transition-colors">
+                Generar Música
               </Link>
               <a href="#sobre-mi" className="text-gray-600 hover:text-emerald-600 transition-colors">
                 Sobre Mí
@@ -73,55 +77,60 @@ export default function HomePage() {
                 Crear Quiz con IA
               </Button>
             </Link>
+            <Link href="/music-generator">
+              <Button size="lg" variant="outline" className="flex items-center gap-2">
+                <Music className="h-5 w-5" />
+                Generar Música
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* AI Quiz Creator Feature */}
+      {/* AI Tools Feature */}
       <section className="py-16 px-4 bg-gradient-to-r from-purple-50 to-pink-50">
         <div className="container mx-auto text-center">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-center gap-3 mb-6">
               <Video className="h-12 w-12 text-purple-600" />
               <Brain className="h-12 w-12 text-pink-600" />
+              <Music className="h-12 w-12 text-orange-600" />
             </div>
-            <h3 className="text-3xl font-bold mb-4">🚀 ¡Novedad! Generador de Quiz con IA</h3>
+            <h3 className="text-3xl font-bold mb-4">🚀 ¡Herramientas de IA Educativa!</h3>
             <p className="text-xl text-gray-600 mb-8">
-              Sube cualquier video educativo y nuestra IA creará automáticamente un quiz personalizado. Perfecto para
-              evaluar la comprensión de tus estudiantes.
+              Crea contenido educativo personalizado con inteligencia artificial. Genera quizzes desde videos y
+              canciones temáticas para hacer tus clases más dinámicas.
             </p>
-            <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
               <Card className="border-purple-200">
                 <CardContent className="p-6 text-center">
                   <Video className="h-8 w-8 text-purple-600 mx-auto mb-3" />
-                  <h4 className="font-semibold mb-2">Sube tu Video</h4>
-                  <p className="text-sm text-gray-600">Cualquier video educativo en inglés</p>
+                  <h4 className="font-semibold mb-2">Generador de Quiz</h4>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Sube cualquier video educativo y crea quizzes automáticamente
+                  </p>
+                  <Link href="/quiz-creator">
+                    <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
+                      Crear Quiz
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
-              <Card className="border-pink-200">
+              <Card className="border-orange-200">
                 <CardContent className="p-6 text-center">
-                  <Brain className="h-8 w-8 text-pink-600 mx-auto mb-3" />
-                  <h4 className="font-semibold mb-2">IA Analiza</h4>
-                  <p className="text-sm text-gray-600">Extrae contenido clave automáticamente</p>
-                </CardContent>
-              </Card>
-              <Card className="border-emerald-200">
-                <CardContent className="p-6 text-center">
-                  <ClipboardList className="h-8 w-8 text-emerald-600 mx-auto mb-3" />
-                  <h4 className="font-semibold mb-2">Quiz Listo</h4>
-                  <p className="text-sm text-gray-600">Preguntas personalizadas al instante</p>
+                  <Music className="h-8 w-8 text-orange-600 mx-auto mb-3" />
+                  <h4 className="font-semibold mb-2">Generador de Música</h4>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Crea canciones educativas personalizadas para enseñar vocabulario
+                  </p>
+                  <Link href="/music-generator">
+                    <Button size="sm" className="bg-orange-600 hover:bg-orange-700">
+                      Crear Canción
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             </div>
-            <Link href="/quiz-creator">
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
-              >
-                <Video className="h-5 w-5 mr-2" />
-                Probar Generador de Quiz
-              </Button>
-            </Link>
           </div>
         </div>
       </section>
@@ -130,7 +139,7 @@ export default function HomePage() {
       <section id="servicios" className="py-16 px-4 bg-white">
         <div className="container mx-auto">
           <h3 className="text-3xl font-bold text-center mb-12">¿Qué Ofrezco?</h3>
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-6 gap-6">
             <Card className="text-center hover:shadow-lg transition-shadow">
               <CardHeader>
                 <FileText className="h-12 w-12 text-emerald-600 mx-auto mb-4" />
@@ -175,6 +184,18 @@ export default function HomePage() {
               <CardContent>
                 <p className="text-gray-600">
                   Exámenes, rúbricas y herramientas de evaluación adaptadas al nivel inicial.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <Music className="h-12 w-12 text-purple-600 mx-auto mb-4" />
+                <CardTitle>Música Educativa</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  Canciones personalizadas con IA para enseñar vocabulario y conceptos de forma divertida.
                 </p>
               </CardContent>
             </Card>
